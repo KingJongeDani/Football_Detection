@@ -37,7 +37,7 @@
 - Webapplikation auf Server starten
 - Genug Trainingsbilder finden
 - Zweites Modell hat Zeit gekostet und trotzdem nicht gut funktioniert
-- Modell funktioniert bei Videos besser als bei Bilder
+- Modell funktioniert bei Videos besser als bei Bildern
 - Confidence muss sehr weit runtergestellt werden
 
 ## Erkenntnisse
