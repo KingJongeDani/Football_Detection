@@ -15,13 +15,14 @@ CONF_THRESH = 0.1
 
 uploaded_video_path = Path('uploaded_video.mp4')
 
-
+# Bounding Boxes werden gezogen
 def draw(result, frame):
     for box in result.boxes:
         x1, y1, x2, y2 = map(int, box.xyxy[0].tolist())
         cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
     return frame
 
+# Streaming vom Video mit Überprüfung ob das Ende erreicht wurde
 def stream() -> Generator[bytes, None, None]:
     global video_done
     video_done = False
