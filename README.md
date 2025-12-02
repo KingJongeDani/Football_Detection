@@ -27,6 +27,8 @@ Nachdem die venv gestartet wurde, muss folgendes eingegeben werden, um alle requ
 2. In das Projektverzeichnis welchseln
 3. Starte die Anwendung mit "python main.py"
 4. Öffne im Browser: "**http://127.0.0.1:9000/**" bzw. jene Adresse, die festgelegt wurde
-5. Nach beliebe ein Bild oder ein kurzes Video zur Erkennung hochladen
-6. Endpunkte /yolo_stream oder /yolo_image aufrufen, um das vorhergesagte Ergebnis zu sehen
+5. Ein Youtube Video Link von einem Fußballspiel aus den selben Perspektiven wie die Beispielvideos/bilder einfügen und dann eine Start/Stop (mm:ss) Zeit eingeben (max 15sek differenz)
+6. Danach auf "YouTube-Clip analysieren" drücken und warten, bis der Ladebalken weg ist
+7. Anschließend auf "Zum Video" drücken, um das vorhergesagte Ergebnis zu sehen
+6. Wenn "Videoende erreicht" angezeigt wird, kann man nach beliebe auf den Knopf "Zurück zur Startseite" drücken und den gesamten Vorgang wiederholen.
 

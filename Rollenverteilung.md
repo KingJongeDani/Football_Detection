@@ -83,3 +83,6 @@
 - NiceGUI Fertigstellung
 - Fertig trainiert
 - Letze Testläufe
+
+## 7. Einheit
+- NiceGUI verbessert, sodass Youtube Links reinkopiert werden können
