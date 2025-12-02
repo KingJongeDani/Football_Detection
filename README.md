@@ -1,9 +1,8 @@
 # Projektbeschreibung
 Dieses Projekt stellt eine Weboberfläche (GUI) für ein YOLOv8-Modell bereit, das Fußballspieler und Bälle in Bildern und Videos erkennt.
 Über die NiceGUI-Webseite können Benutzer:
-    - Bilder hochladen -> werden automatisch zugeschnitten (640×640) und - vorhergesagt
-    - Videos hochladen -> werden frameweise analysiert und live im Browser gestreamt
-    - Bounding Boxes der erkannten Personen ansehen
+1. Einen Youtube-Link einfügen + Start/Stop-zeit eingeben
+2. Bounding Boxes der erkannten Personen & Bälle ansehen
 
 Das gesamte Setup läuft als Webserver, den man im Browser öffnen kann.
 
