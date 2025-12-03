@@ -85,10 +85,15 @@ def download_and_cut_youtube(url: str, start: str, end: str, output_path: Path):
 def index():
     ui.markdown('#Football Detection')
     ui.markdown('##Analysiere einen YouTube-Ausschnitt mit YOLO:')
-    ui.markdown("1.) Youtube Fußball Video mit Folgelperspektive von der Seitenlinie suchen")
+
+    with ui.row():
+        ui.markdown("1.) Youtube Fußball Video mit Vogelperspektive von der Seitenlinie suchen. Unterhalb ist ein Beispielbild!")
+        ui.image('Picture_Example1.jpg').style('max-width:200px; border-radius:8px;')
+
     ui.markdown("2.) Link reinkopieren und Start- / Stoppzeit eingeben (mm:ss) - maximal 15 Sekunden Differenz ;  Video so kurz wie möglich wählen")
-    ui.markdown("3.) Auf Clip Analysieren drücken und warten bis das Video geladen ist")
-    ui.markdown("4.) Auf Zum Video drücken und genießen! :)")
+    ui.markdown("3.) Auf 'Youtube-Clip Analysieren' drücken und warten bis das Video geladen ist")
+    ui.markdown("4.) Auf 'Zum Video' drücken und genießen! :)")
+
 
 
     link_input = ui.input('YouTube Link')
@@ -98,12 +103,12 @@ def index():
     # Spinner Ladebalken
     spinner = ui.spinner(size='lg').classes('mt-4').style('display: none;')
 
-    # Button "Zum Video" wird später eingefügt
-    video_button = ui.button(
-        'Zum Video',
-        on_click=lambda: ui.run_javascript('window.location.href="/video"')
-    ).classes('mt-4')
-    video_button.disable()   # Startzustand: grau/deaktiviert
+    ## Button "Zum Video" wird später eingefügt
+    # video_button = ui.button(
+    #     'Zum Video',
+    #     on_click=lambda: ui.run_javascript('window.location.href="/video"')
+    # ).classes('mt-4')
+    #video_button.disable()   # Startzustand: grau/deaktiviert
 
     async def handle_youtube():
         spinner.style('display: block;')   # Spinner einblenden
@@ -113,7 +118,7 @@ def index():
         try:
             download_and_cut_youtube(link_input.value, start_input.value, end_input.value, uploaded_video_path)
             ui.notify('Clip gespeichert!')
-            video_button.enable()   # Aktiviert den Button, sobald Video fertig ist
+            #video_button.enable()   # Aktiviert den Button, sobald Video fertig ist
         except Exception as e:
             ui.notify('Es gab einen Fehler bei der Eingabe. Lade die Website neu und versuche es erneut.', type='warning')
             print(f'Fehler: {e}')
@@ -125,7 +130,7 @@ def index():
     ui.button('YouTube-Clip analysieren', on_click=handle_youtube).classes('mt-2')
 
     # Danach der "Zum Video"-Button
-    video_button
+    ui.button('Zum Video',on_click=lambda: ui.run_javascript('window.location.href="/video"')).classes('mt-4')
 
 
 # Video-Seite, bekommt das Video von anderen Endpunkt (/yolo_stream)
