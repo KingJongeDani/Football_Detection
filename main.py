@@ -8,6 +8,16 @@ from ultralytics import YOLO
 import yt_dlp
 from moviepy import VideoFileClip
 
+import shutil
+import subprocess
+
+def is_aria2c_available() -> bool:
+    """Prüft, ob aria2c im PATH gefunden wird"""
+    return shutil.which("aria2c") is not None
+
+
+
+
 # Modell-Pfad
 MODEL_PATH = 'best_football.pt'
 model = YOLO(MODEL_PATH)
@@ -66,11 +76,32 @@ def download_and_cut_youtube(url: str, start: str, end: str, output_path: Path):
         if f.exists():
             f.unlink()
     # Lädt das Video
-    ydl_opts = {
-        'format': 'bestvideo+bestaudio/best',
+    
+    if is_aria2c_available():
+        ydl_opts = {
+        'format': 'bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]/best',
         'outtmpl': 'youtube_video.%(ext)s',
         'merge_output_format': 'mp4',
-    }
+        'external_downloader': 'aria2c',
+        'external_downloader_args': { 
+            'default': ['-c', '-j', '16', '-x', '16', '-s', '16', '-k', '1M', '--file-allocation=none'] 
+            # 16 Verbindungen sind meist optimal – bei Problemen auf 8 reduzieren 
+        },   # ← Hier fehlt ein Komma nach der schließenden Klammer!
+        # Nice to have – hilft bei instabilen Verbindungen 
+        'continuedl': True, 
+        'retries': 10, 
+        'fragment_retries': 10, 
+        }
+    else:
+        ydl_ops = {
+            'format': 'bestvideo+bestaudio/best',
+            'outtmpl': 'youtube_video.%(ext)s',
+            'merge_output_format': 'mp4',
+            'sleep_interval': 2,          # etwas Entlastung für YouTube-Server
+            'max_sleep_interval': 8,
+            'no_warnings': False
+
+        }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
 
@@ -150,5 +181,15 @@ def video_page():
 
     ui.timer(1.0, check_done)  # prüft jede Sekunde, also fragt eigentlich ab "Ist es schon fertig?"
     ui.button('Zurück zur Startseite', on_click=lambda: ui.run_javascript('window.location.href="/"')).classes('mt-4')
+
+
+if is_aria2c_available():
+    print("aria2c ist installiert und erreichbar!")
+    # Hier kannst du yt-dlp mit aria2c nutzen
+else:
+    print("aria2c nicht gefunden!")
+    print("→ Installiere es mit: brew install aria2  (macOS)")
+    print("   oder: sudo apt install aria2     (Ubuntu/Debian)")
+    print("   oder lade es manuell von https://aria2.github.io/")
 
 ui.run(host='0.0.0.0', port=9000, reload=False)
