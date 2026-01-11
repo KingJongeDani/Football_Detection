@@ -79,19 +79,19 @@ def download_and_cut_youtube(url: str, start: str, end: str, output_path: Path):
     
     if is_aria2c_available():
         ydl_opts = {
-        'format': 'bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]/best',
-        'outtmpl': 'youtube_video.%(ext)s',
-        'merge_output_format': 'mp4',
-        'external_downloader': 'aria2c',
-        'external_downloader_args': { 
-            'default': ['-c', '-j', '16', '-x', '16', '-s', '16', '-k', '1M', '--file-allocation=none'] 
-            # 16 Verbindungen sind meist optimal – bei Problemen auf 8 reduzieren 
-        },   # ← Hier fehlt ein Komma nach der schließenden Klammer!
-        # Nice to have – hilft bei instabilen Verbindungen 
-        'continuedl': True, 
-        'retries': 10, 
-        'fragment_retries': 10, 
-        }
+            'format': 'bestvideo[height<=720][ext=mp4]+bestaudio[ext=m4a]/best[height<=720][ext=mp4]/best',
+            'outtmpl': 'youtube_video.%(ext)s',
+            'merge_output_format': 'mp4',
+            'external_downloader': 'aria2c',
+            'external_downloader_args': { 
+                'default': ['-c', '-j', '16', '-x', '16', '-s', '16', '-k', '1M', '--file-allocation=none'] 
+                # 16 Verbindungen sind meist optimal – bei Problemen auf 8 reduzieren 
+            },   # ← Hier fehlt ein Komma nach der schließenden Klammer!
+            # Nice to have – hilft bei instabilen Verbindungen 
+            'continuedl': True, 
+            'retries': 10, 
+            'fragment_retries': 10, 
+            }
     else:
         ydl_ops = {
             'format': 'bestvideo+bestaudio/best',
