@@ -192,4 +192,4 @@ else:
     print("   oder: sudo apt install aria2     (Ubuntu/Debian)")
     print("   oder lade es manuell von https://aria2.github.io/")
 
-ui.run(host='0.0.0.0', port=9000, reload=False)
+ui.run(host='0.0.0.0', port=9000, reload=False, reconnect_timeout=90)
