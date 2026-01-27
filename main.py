@@ -8,6 +8,9 @@ from ultralytics import YOLO
 import yt_dlp
 from moviepy import VideoFileClip
 
+app.add_static_files('/static', 'static')
+
+
 # Modell-Pfad
 MODEL_PATH = 'best_football.pt'
 model = YOLO(MODEL_PATH)
@@ -83,22 +86,48 @@ def download_and_cut_youtube(url: str, start: str, end: str, output_path: Path):
 # Hauptseite, hier kann man dann einen Link einfügen, Start und Endzeit (max 15sek lang), Knöpfe für "jetzt predicten" und "gehe zur prediction"
 @ui.page('/')
 def index():
-    ui.markdown('#Football Detection')
-    ui.markdown('##Analysiere einen YouTube-Ausschnitt mit YOLO:')
+
+    ui.add_head_html("""
+    <style>
+    body {
+        background: rgba(0,0,0,0); /* wichtig für Transparenz */
+    }
+
+    body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('/static/background.jpg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        opacity: 0.05; /* 0.05 = extrem transparent, 0.20 = etwas sichtbarer */
+        z-index: -1; /* bleibt hinter allem */
+    }
+    </style>
+    """)
+
+
+    ui.markdown('#**Football Detection**')
+    ui.markdown('##**Analysiere einen YouTube-Ausschnitt mit YOLO:**')
 
     with ui.row():
-        ui.markdown("1.) Youtube Fußball Video mit Vogelperspektive von der Seitenlinie suchen. Unterhalb ist ein Beispielbild!")
+        ui.markdown("#####**1.) YouTube Fußball Video mit Vogelperspektive von der Seitenlinie suchen. Unterhalb ist ein Beispielbild!**")
         ui.image('Picture_Example1.jpg').style('max-width:200px; border-radius:8px;')
 
-    ui.markdown("2.) Link reinkopieren und Start- / Stoppzeit eingeben (mm:ss) - maximal 15 Sekunden Differenz ;  Video so kurz wie möglich wählen")
-    ui.markdown("3.) Auf 'Youtube-Clip Analysieren' drücken und warten bis das Video geladen ist")
-    ui.markdown("4.) Auf 'Zum Video' drücken und genießen! :)")
+    ui.markdown("#####**2.) Link reinkopieren und Start- / Stoppzeit eingeben (mm:ss) - maximal 15 Sekunden Differenz ;  Video so kurz wie möglich wählen**")
+    ui.markdown("#####**3.) Auf 'YouTube-Clip Analysieren' drücken und warten bis das Video geladen ist**")
+    ui.markdown("#####**4.) Auf 'Zum Video' drücken und genießen! :)**")
 
 
 
-    link_input = ui.input('YouTube Link')
-    start_input = ui.input('Startzeit (mm:ss)', value='00:00')
-    end_input = ui.input('Endzeit (mm:ss)', value='00:10')
+    link_input = ui.input('YouTube Link').props('label-class="text-weight-bold"')
+    start_input = ui.input('Startzeit (mm:ss)', value='00:00').props('label-class="text-weight-bold"')
+    end_input = ui.input('Endzeit (mm:ss)', value='00:10').props('label-class="text-weight-bold"')
+
 
     # Spinner Ladebalken
     spinner = ui.spinner(size='lg').classes('mt-4').style('display: none;')
@@ -151,4 +180,4 @@ def video_page():
     ui.timer(1.0, check_done)  # prüft jede Sekunde, also fragt eigentlich ab "Ist es schon fertig?"
     ui.button('Zurück zur Startseite', on_click=lambda: ui.run_javascript('window.location.href="/"')).classes('mt-4')
 
-ui.run(host='0.0.0.0', port=9000, reload=False)
+ui.run(host='0.0.0.0', port=9001, reload=False)
