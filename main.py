@@ -28,22 +28,24 @@ def draw(result, frame):
 def stream() -> Generator[bytes, None, None]:
     global video_done
     video_done = False
-    cap = cv2.VideoCapture(str(uploaded_video_path))
-    while True:
-        ok, frame = cap.read()
-        if not ok:
-            print('Videoende erreicht')
-            video_done = True
-            break
-        result = model(frame, conf=CONF_THRESH, verbose=False)[0]
-        frame = draw(result, frame)
-        ok, jpg = cv2.imencode('.jpg', frame)
-        if ok:
-            #Verwandelt funktion stream() in einen Generator welcher dann Frame für Frame die predictede Bilder an die Website geben kann, damit es weniger Wartezeit gibt, dass man etwas sieht
-            # Problem: Es laggt dadurch, es wird nicht mehr "Maßstabsgetreu" (1sek != 1sek)
-            # Kurz gesagt "pausiert" yield die Funktion an einer Stelle und kann sie genau dort wieder weiterführen
-            yield (b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' + jpg.tobytes() + b'\r\n') 
-    cap.release()
+
+    while True:  # Endlosschleife für Loop
+        cap = cv2.VideoCapture(str(uploaded_video_path))
+
+        while True:
+            ok, frame = cap.read()
+            if not ok:
+                break  # innerer Loop endet → Video wird neu gestartet
+
+            result = model(frame, conf=CONF_THRESH, verbose=False)[0]
+            frame = draw(result, frame)
+            ok, jpg = cv2.imencode('.jpg', frame)
+            if ok:
+                yield (b'--frame\r\nContent-Type: image/jpeg\r\n\r\n' +
+                       jpg.tobytes() + b'\r\n')
+
+        cap.release()
+
 
 # Streaming Endpunkt, falls man das Video nochmal sehen möchte (Muss man manuell dann eingeben)
 @app.get('/yolo_stream')
@@ -178,4 +180,5 @@ def video_page():
     ui.timer(1.0, check_done)  # prüft jede Sekunde, also fragt eigentlich ab "Ist es schon fertig?"
     ui.button('Zurück zur Startseite', on_click=lambda: ui.run_javascript('window.location.href="/"')).classes('mt-4')
 
-ui.run(host='0.0.0.0', port=9001, reload=False)
+ui.run(host='0.0.0.0', port=9001, reload=False, reconnect_timeout=60.0)
+ 
