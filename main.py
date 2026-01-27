@@ -10,7 +10,6 @@ from moviepy import VideoFileClip
 
 app.add_static_files('/static', 'static')
 
-
 # Modell-Pfad
 MODEL_PATH = 'best_football.pt'
 model = YOLO(MODEL_PATH)
@@ -92,7 +91,6 @@ def index():
     body {
         background: rgba(0,0,0,0); /* wichtig für Transparenz */
     }
-
     body::before {
         content: "";
         position: fixed;
